@@ -15,7 +15,7 @@ type SrvcRes struct {
 	Headers  map[string]string
 }
 
-func marshalResponse(r interface{}) ([]byte, error) {
+func MarshalResponse(r interface{}) ([]byte, error) {
 	return json.MarshalIndent(r, "", "")
 }
 
@@ -32,7 +32,7 @@ func (s SrvcRes) RenderResponse(w http.ResponseWriter) {
 		"message":      s.Message,
 		"status":       true}
 
-	data, _ := marshalResponse(formatted)
+	data, _ := MarshalResponse(formatted)
 	w.Header().Set("Content-Length", fmt.Sprint(len(data)))
 
 	/* HTTP STATUS CODE*/

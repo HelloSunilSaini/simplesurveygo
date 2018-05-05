@@ -2,6 +2,8 @@ package servicehandlers
 
 import (
 	"fmt"
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"simplesurveygo/dao"
 )
@@ -35,5 +37,17 @@ func (p SurveyHandler) Put(r *http.Request) SrvcRes {
 }
 
 func (p SurveyHandler) Post(r *http.Request) SrvcRes {
-	return ResponseNotImplemented()
+	body, err := ioutil.ReadAll(r.Body)
+
+	var userResponse []dao.DeactivateSurveyStruct
+	err = json.Unmarshal(body, &userResponse)
+
+	for _,v := range userResponse{
+		go dao.DeactivateSurvey(v)
+	}
+	if err == nil {
+		return Simple200OK("Status updated successfully")
+	} else {
+		return InternalServerError("Something went wrong")
+	}
 }
